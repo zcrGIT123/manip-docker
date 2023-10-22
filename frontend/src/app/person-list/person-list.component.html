@@ -1,0 +1,178 @@
+<div class="container-fluid table-responsive mt-5" id="content">
+    <div class="container-fluid d-flex flex-row-reverse mt -5 mb-2">
+        <button class="btn btn-success" (click)="openModal(addPersonModal)"> Nouveau </button>
+    </div>
+    <div class="container-fluid text-center py-2 total">
+        <span class="text-danger total-value">{{totalelements}}</span> personnes
+    </div>
+    <div class="table-container">
+        <table class="table table-striped table-hover">
+            <thead>
+              <tr class="table-secondary">
+                <th scope="col">
+                    <input type="text" class="filter-input" placeholder="Nom" [(ngModel)]="lastname" (keyup)="filter()">
+                    <i class="bi bi-filter-left ms-2 filter-icon" *ngIf="this.sortby==='' || this.sortby!=='lastname'" (click)="setSort('lastname', 'ASC')"></i>
+                    <i class="bi bi-sort-down ms-2 filter-icon" *ngIf="sortby==='lastname' && sortDirection==='DESC'" (click)="setSort('', '')"></i>
+                    <i class="bi bi-sort-up ms-2 filter-icon" *ngIf="sortby==='lastname' && sortDirection==='ASC'" (click)="setSort('lastname', 'DESC')"></i>
+                </th>
+                <th scope="col">
+                    <input type="text" class="filter-input" placeholder="Prénom" [(ngModel)]="firstname" (keyup)="filter()">
+                    <i class="bi bi-filter-left ms-2 filter-icon" *ngIf="this.sortby==='' || this.sortby!=='firstname'" (click)="setSort('firstname', 'ASC')"></i>
+                    <i class="bi bi-sort-down ms-2 filter-icon" *ngIf="sortby==='firstname' && sortDirection==='DESC'" (click)="setSort('', '')"></i>
+                    <i class="bi bi-sort-up ms-2 filter-icon" *ngIf="sortby==='firstname' && sortDirection==='ASC'" (click)="setSort('firstname', 'DESC')"></i>
+                </th>
+                <th scope="col">
+                    <input type="text" class="filter-input" placeholder="Naissance" [(ngModel)]="birthdate" (keyup)="filter()">
+                    <i class="bi bi-filter-left ms-2 filter-icon" *ngIf="this.sortby==='' || this.sortby!=='birthdate'" (click)="setSort('birthdate', 'ASC')"></i>
+                    <i class="bi bi-sort-down ms-2 filter-icon" *ngIf="sortby==='birthdate' && sortDirection==='DESC'" (click)="setSort('', '')"></i>
+                    <i class="bi bi-sort-up ms-2 filter-icon" *ngIf="sortby==='birthdate' && sortDirection==='ASC'" (click)="setSort('birthdate', 'DESC')"></i>
+                </th>
+                <th scope="col">
+                    <select class="filter-input" [(ngModel)]="gender" (change)="filter()">
+                        <option value="" hidden selected>Sexe</option>
+                        <option value="">Tous</option>
+                        <option value="male">Masculin</option>
+                        <option value="female">Féminin</option>
+                    </select>
+                    <i class="bi bi-filter-left ms-2 filter-icon" *ngIf="this.sortby==='' || this.sortby!=='gender'" (click)="setSort('gender', 'ASC')"></i>
+                    <i class="bi bi-sort-down ms-2 filter-icon" *ngIf="sortby==='gender' && sortDirection==='DESC'" (click)="setSort('', '')"></i>
+                    <i class="bi bi-sort-up ms-2 filter-icon" *ngIf="sortby==='gender' && sortDirection==='ASC'" (click)="setSort('gender', 'DESC')"></i>
+                </th>
+                <th scope="col">
+                    <input type="text" class="filter-input" placeholder="Date d'ajout" [(ngModel)]="registrationdate" (keyup)="filter()">
+                    <i class="bi bi-filter-left ms-2 filter-icon" *ngIf="this.sortby==='' || this.sortby!=='registrationdate'" (click)="setSort('registrationdate', 'ASC')"></i>
+                    <i class="bi bi-sort-down ms-2 filter-icon" *ngIf="sortby==='registrationdate' && sortDirection==='DESC'" (click)="setSort('', '')"></i>
+                    <i class="bi bi-sort-up ms-2 filter-icon" *ngIf="sortby==='registrationdate' && sortDirection==='ASC'" (click)="setSort('registrationdate', 'DESC')"></i>
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="persons.length > 0 && !isLoading">
+                <tr *ngFor="let person of persons" (click)="select(person)" [ngClass]="{ 'selected': selected==person}" >
+                    <td [title]="person.lastname" [innerHTML]="person.lastname | highlight:lastname"></td>
+                    <td [title]="person.firstname" [innerHTML]="person.firstname | highlight:firstname"></td>
+                    <td [innerHTML]="person.birthdate | highlight:birthdate"></td>
+                    <td>{{person.gender}}</td>
+                    <td [innerHTML]="person.registrationdate | highlight:registrationdate"></td>
+                </tr>     
+            </tbody>
+            <!-- <tr>
+                <td>
+                    <input [(ngModel)]="tlastname" placeholder="Nom" type="text" class="form-control form-control-sm">
+                </td>
+                <td>
+                    <input [(ngModel)]="tfirstname" placeholder="Prenom" type="text" class="form-control form-control-sm">
+                </td>
+                <td>
+                    <input [(ngModel)]="tbirthdate" type="date" class="form-control form-control-sm">
+                </td>
+                <td>
+                    <select class="filter-input" [(ngModel)]="tgender" class="form-select form-select-sm w-100">
+                        <option value="male" selected>Masculin</option>
+                        <option value="female">Féminin</option>
+                    </select>
+                </td>
+                <td style="text-align: left;">
+                    <button class="btn btn-sm btn-success ms-2" (click)="addPerson2()" style="background-color: green;">
+                        <i class="bi bi-plus" *ngIf="!addspin"></i>
+                        <span class="spinner-border spinner-border-sm mr-1 mt-1" role="status" aria-hidden="true" *ngIf="addspin"></span>
+                    </button>
+                </td>
+            </tr>  -->
+        </table>
+        <div class="d-flex justify-content-center align-items-center ms-auto" *ngIf="isLoading" style="height: 400px;">
+            <div class="spinner-border text-secondary" style="width: 80px; height: 80px;">
+                <span class="sr-only me-2" role="status" aria-hidden="true"></span>
+            </div>
+        </div>
+    </div>
+    <hr>
+    
+    <div class="row d-flex mb-5" *ngIf="pages.length>0">
+        <div class="col-md-4 d-flex justify-content-center">
+        
+        </div>
+        <div class="col-md-4 align-self-center text-center page-info">
+            <ul class="nav nav-pills">
+                <li class="nav-item" >
+                    <a class="nav-link" href="" (click)="setPage(0, $event)"><i class="bi bi-chevron-bar-left"></i></a>
+                </li>
+                <li class="nav-item" >
+                    <a class="nav-link" role="button" href="" (click)="setPage(page-1, $event)"><i class="bi bi-chevron-double-left"></i></a>
+                </li>
+            
+                <!-- <li class="nav-item" *ngFor="let p of pages; let i=index">
+                    <a class="nav-link" *ngIf="i===page || i===page-1 || i===page+1" [ngClass]="{active: i===page}" href="" (click)="setPage(i, $event)">{{i+1}}</a>
+                </li> -->
+                <div class="mt-2">
+                    <input type="number" style="width: 50px; height: 25px;" [(ngModel)]="currentPage" #pageInput (keyup)="changePage()" > / <span>{{pages.length}}</span>
+                </div>
+            
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="" (click)="setPage(page+1, $event)"><i class="bi bi-chevron-double-right"></i></a>
+                </li>
+                <li class="nav-item" >
+                    <a class="nav-link" href="" (click)="setPage(pages.length-1, $event)"><i class="bi bi-chevron-bar-right"></i></a>
+                </li>
+                </ul>
+        </div>
+        <div class="col-md-4 d-flex justify-content-center">
+            <select class="form-select form-select-sm" id="size-select" name="size" #selectSize [ngModel]="size" (change)="setSize(+(selectSize.value))">
+                <option value="5">5 elts/page</option>
+                <option value="10">10 elts/page</option>
+                <option value="15">15 elts/page</option>
+                <option value="20">20 elts/page</option>
+                <option value="25">25 elts/page</option>
+            </select>
+        </div>
+    </div>
+
+</div>
+
+<ng-template #addPersonModal let-modal>
+    <div class="modal-body p-3">
+        <form #addForm="ngForm" [formGroup]="addform" (ngSubmit)="addPerson()">
+            <div class="alert alert-danger error-section" *ngIf="adderror">{{adderror}}</div>
+            
+            <div class="form-group mb-1">
+                <label>Nom(s)</label>
+                <input formControlName="lastname" type="text" class="form-control form-control-sm"
+                    [ngClass]="{ 'status-error': f['lastname'].touched && f['lastname'].errors }">
+                <div *ngIf="f['lastname'].invalid && f['lastname'].touched">
+                    <small *ngIf="f['lastname'].errors?.['required']" class="text-danger">Le nom est requis!</small>
+                </div>
+            </div>
+            <div class="form-group mb-1">
+                <label>Prénom(s)</label>
+                <input formControlName="firstname" type="text" class="form-control form-control-sm"
+                    [ngClass]="{ 'status-error': f['firstname'].touched && f['firstname'].errors }">
+                <div *ngIf="f['firstname'].invalid && f['firstname'].touched">
+                    <small *ngIf="f['firstname'].errors?.['required']" class="text-danger">Le prénom est requis!</small>
+                </div>
+            </div>
+            <div class="form-group mb-1">
+                <label>Date de naissance</label>
+                <input formControlName="birthdate" type="date" class="form-control form-control-sm"
+                    [ngClass]="{ 'status-error': f['birthdate'].touched && f['birthdate'].errors }">
+                <div *ngIf="f['birthdate'].invalid && f['birthdate'].touched">
+                    <small *ngIf="f['birthdate'].errors?.['required']" class="text-danger">La date de naissance est requise!</small>
+                </div>
+            </div>
+            <div class="form-group mb-1">
+                <label>Sexe</label>
+                <select formControlName="gender" class="form-select form-select-sm">
+                    <option value="male">Masculin</option>
+                    <option value="female">Feminin</option>
+                </select>
+            </div>
+            <div class="d-flex justify-content-around mt-2">
+                <button class="btn btn-primary" type="submit"
+                    [disabled]="!addForm.valid">
+                    <span class="spinner-border spinner-border-sm mr-1 mt-1" role="status" aria-hidden="true" *ngIf="addspin"></span>
+                    Ajouter
+                </button>
+                <button class="btn btn-secondary" (click)="modal.close()"> Annuler </button>
+            </div>
+        </form>
+    </div>
+</ng-template>
