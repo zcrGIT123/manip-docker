@@ -14,6 +14,6 @@ FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /home/app/code
 
 COPY --from=build /home/app/code/target/*.jar app.jar
-
+ENV MONGODB_URI=$MONGODB_URI
 
 ENTRYPOINT ["java","-jar","app.jar"]

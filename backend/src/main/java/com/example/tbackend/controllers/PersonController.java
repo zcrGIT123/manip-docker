@@ -2,16 +2,21 @@ package com.example.tbackend.controllers;
 
 import com.example.tbackend.DTO.request.AddPersonRequest;
 import com.example.tbackend.models.Person;
+import com.example.tbackend.repositories.PersonRepository;
 import com.example.tbackend.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/api/person")
 @CrossOrigin(origins = "*")
 public class PersonController {
+
+    @Autowired
+    PersonRepository personRepo;
 
     @Autowired
     PersonService personService;
@@ -37,6 +42,11 @@ public class PersonController {
     public ResponseEntity<?> addPerson(@RequestBody AddPersonRequest request) {
         Person person = personService.add(request);
         return ResponseEntity.ok(person);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> testApi() {
+        return ResponseEntity.ok(personService.test());
     }
 
 }

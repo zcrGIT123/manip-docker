@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,6 +27,16 @@ public class PersonServiceImpl implements  PersonService{
     PersonRepository personRepo;
     @Autowired
     MongoTemplate mongoTemplate;
+
+    @Override
+    public Person test(){
+        Person person = new Person();
+        person.setBirthdate("2000-02-10");
+        person.setFirstname("Arold");
+        person.setLastname("Donang");
+        person.setGender("Masculin");
+        return personRepo.save(person);
+    }
 
     @Override
     public Person add(AddPersonRequest request) {

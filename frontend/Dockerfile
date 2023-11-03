@@ -19,7 +19,8 @@ RUN apt-get update && \
     npm install --force && \
     npm run build
 
-
+ENV BACK_API=$BACK_API
 FROM nginx:1.20.1
 COPY --from=build-step /usr/app/dist/frontend /usr/share/nginx/html
 EXPOSE 80
+CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/assets/env.sample.js > /usr/share/nginx/html/assets/env.js && exec nginx -g 'daemon off;'"]

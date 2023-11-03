@@ -11,4 +11,5 @@ public interface PersonService {
     void deleteById(String id);
     Page<Person> getPaginated(String firstname, String lastname, String birthdate, String gender, String registrationdate,
                               String sortby, String sortdirection, int page, int size);
+    Person test();
 }

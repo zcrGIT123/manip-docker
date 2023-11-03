@@ -2,10 +2,10 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ./xxxx
+      context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "xxxx:xxxx"
+      - "8080:8080"
     volumes:
       - ./vue360.projets:/home/app/code/vue360.projets
     depends_on:
@@ -14,14 +14,14 @@ services:
     image: "mongo"
     restart: always
     ports:
-      - xxxx:xxxx
+      - 27017:27017
     volumes:
       - ./db:/data/db
   frontend:
     build:
       context: ./frontend
-      dockerfile: xxxx
+      dockerfile: Dockerfile
     ports:
-      - "xxxx:xxxx"
+      - "4200:80"
     depends_on:
-      - xxxx
+      - backend

@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:    
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: dals64/manip-back:v5
+        
+        ports:
+        - containerPort: 8080
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: mongo-root-username
+
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: mongo-root-password
+          
+          - name:  MONGODB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: mongodb-configmap 
+                key: database-url
+
+          # - name:  MONGODB_DATABASE
+          #   valueFrom:
+          #     configMapKeyRef:
+          #       name:  mongodb-configmap 
+          #       key:  database
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30117
